@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cheiros do Vale - O Melhor da Região</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1b4332;
+            --secondary: #2d6a4f;
+            --accent: #e76f51;
+            --light: #f9fbf9;
+            --dark: #212529;
+            --gray: #6c757d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        /* Top Bar */
+        header {
+            background: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 1.5rem 1rem;
+        }
+
+        header h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.3rem;
+        }
+
+        header p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        /* Container Principal */
+        .container {
+            max-width: 1100px;
+            margin: 2.5rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .section-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--accent);
+            padding-left: 10px;
+        }
+
+        /* Views (Alternância de Páginas) */
+        .view {
+            display: none;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        /* Grid de Produtos (1 Card) */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 320px));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border-top: 4px solid var(--secondary);
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            background: #f1f3f5;
+        }
+
+        .product-info {
+            padding: 1.2rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        .product-info h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.1rem;
+            color: var(--primary);
+            margin-bottom: 0.8rem;
+        }
+
+        .card-price {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.3rem;
+            color: var(--accent);
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .btn-comprar {
+            display: block;
+            width: 100%;
+            background-color: #ffe600;
+            color: #2d3277;
+            text-align: center;
+            padding: 0.8rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 0.95rem;
+            box-shadow: 0 3px 10px rgba(255, 230, 0, 0.3);
+            transition: background 0.2s;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .btn-comprar:hover {
+            background-color: #ffd000;
+        }
+
+        /* Página de Detalhes do Produto */
+        .back-btn {
+            background: var(--gray);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+
+        .back-btn:hover {
+            background: var(--dark);
+        }
+
+        .details-container {
+            background: white;
+            border-radius: 12px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3rem;
+            align-items: center;
+            position: relative;
+        }
+
+        /* Selo Oferta Relâmpago no Canto Superior Direito */
+        .flash-badge {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            background-color: var(--accent);
+            color: white;
+            padding: 0.5rem 1.2rem;
+            border-radius: 6px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            box-shadow: 0 4px 10px rgba(231, 111, 81, 0.3);
+            letter-spacing: 0.5px;
+        }
+
+        .details-image-area {
+            flex: 1;
+            min-width: 280px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .main-img-box {
+            width: 100%;
+            text-align: center;
+            background: #f1f3f5;
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .main-img-box img {
+            max-width: 100%;
+            max-height: 350px;
+            border-radius: 6px;
+            object-fit: contain;
+        }
+
+        .thumbnail-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .thumbnail-row img {
+            width: 65px;
+            height: 65px;
+            object-fit: cover;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: border 0.2s, transform 0.2s;
+        }
+
+        .thumbnail-row img:hover {
+            border-color: var(--secondary);
+            transform: scale(1.05);
+        }
+
+        .details-content {
+            flex: 1.2;
+            min-width: 280px;
+        }
+
+        .details-content h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            padding-right: 120px; /* Espaço para o selo em telas maiores */
+        }
+
+        .details-pricing {
+            background: #fdf0ed;
+            padding: 1rem;
+            border-left: 4px solid var(--accent);
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+        }
+
+        .details-pricing .old {
+            font-size: 1rem;
+            color: var(--gray);
+            text-decoration: line-through;
+        }
+
+        .details-pricing .current {
+            font-size: 2.2rem;
+            color: var(--accent);
+            font-weight: 800;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .details-desc {
+            font-size: 1rem;
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .details-btn {
+            display: block;
+            width: 100%;
+            background-color: #ffe600;
+            color: #2d3277;
+            text-align: center;
+            padding: 1.1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 15px rgba(255, 230, 0, 0.3);
+            transition: background 0.2s;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .details-btn:hover {
+            background-color: #ffd000;
+        }
+
+        /* Seção de Redes Sociais */
+        .social-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2.5rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .social-section h2 {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 1.6rem;
+        }
+
+        .social-section p {
+            color: var(--gray);
+            margin-bottom: 2rem;
+        }
+
+        .social-grid {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .social-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0.9rem 1.8rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.95rem;
+            transition: transform 0.2s, opacity 0.2s;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .social-btn:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+
+        .btn-tiktok { background-color: #000000; color: white; }
+        .btn-ml { background-color: #ffe600; color: #2d3277; }
+        .btn-shopee { background-color: #ee4d2d; color: white; cursor: default; }
+
+        /* Rodapé */
+        footer {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+            font-size: 0.9rem;
+        }
+
+        @media(max-width: 768px) {
+            .flash-badge {
+                position: static;
+                display: inline-block;
+                margin-bottom: 1rem;
+            }
+            .details-content h2 {
+                padding-right: 0;
+            }
+            .social-grid { flex-direction: column; }
+            .social-btn { width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Cabeçalho da Loja -->
+    <header>
+        <h1>Cheiros do Vale</h1>
+        <p>O melhor da região em soluções de limpeza, desinfetantes e aromatizantes.</p>
+    </header>
+
+    <div class="container">
+
+        <!-- VISÃO 1: VITRINE DE PRODUTOS -->
+        <div id="catalog-view" class="view active">
+            <h2 class="section-title">Produto em Destaque</h2>
+
+            <div class="products-grid">
+                
+                <!-- Card Único -->
+                <div class="product-card" onclick="showProduct()">
+                    <img src="https://i.postimg.cc/m2207NzL/Captura-de-tela-2026-08-22-190453.png" alt="Desinfetante Caixa de Detritos 5L">
+                    <div class="product-info">
+                        <h3>Desinfetante Caixa de Detritos 5L</h3>
+                        <div class="card-price">R$ 169,00</div>
+                        <button class="btn-comprar">Comprar</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Seção de Redes Sociais -->
+            <section class="social-section">
+                <h2>Redes Sociais</h2>
+                <p>Acompanhe nosso conteúdo e novidades!</p>
+                <div class="social-grid">
+                    <a href="https://www.tiktok.com/@cfseltda" class="social-btn btn-tiktok" target="_blank">🎵 TikTok (@cfseltda)</a>
+                    <a href="https://lista.mercadolivre.com.br/_CustId_344314646" class="social-btn btn-ml" target="_blank">📦 Mercado Livre</a>
+                    <div class="social-btn btn-shopee">🛒 Shopee: Em-breve</div>
+                </div>
+            </section>
+        </div>
+
+
+        <!-- VISÃO 2: PÁGINA DE DETALHES DO PRODUTO -->
+        <div id="product-view" class="view">
+            <button class="back-btn" onclick="showCatalog()">← Voltar para a Loja</button>
+            
+            <div class="details-container">
+                <!-- Selo no canto superior direito -->
+                <div class="flash-badge">Oferta Relâmpago</div>
+
+                <div class="details-image-area">
+                    <div class="main-img-box">
+                        <img id="main-det-img" src="https://i.postimg.cc/m2207NzL/Captura-de-tela-2026-08-22-190453.png" alt="Produto Principal">
+                    </div>
+                    <!-- Miniaturas para clicar e trocar a imagem principal -->
+                    <div class="thumbnail-row">
+                        <img src="https://i.postimg.cc/m2207NzL/Captura-de-tela-2026-08-22-190453.png" alt="Foto 1" onclick="changeMainImage(this.src)">
+                        <img src="https://i.postimg.cc/qqpWb21h/Captura-de-tela-2026-08-22-190502.png" alt="Foto 2" onclick="changeMainImage(this.src)">
+                        <img src="https://i.postimg.cc/6qzgDTSx/Captura-de-tela-2026-08-22-190410.png" alt="Foto 3" onclick="changeMainImage(this.src)">
+                    </div>
+                </div>
+
+                <div class="details-content">
+                    <h2>Desinfetante Caixa de Detritos 5L</h2>
+                    <div class="details-pricing">
+                        <span class="old">De R$ 230,99</span><br>
+                        <span class="current">R$ 169,00</span>
+                    </div>
+                    <p class="details-desc">
+                        O melhor da região (Frescor de Primavera). Desinfetante bactericida de alta potência desenvolvido especialmente para banheiros químicos, trailers e motorhomes. Neutraliza odores fortes instantaneamente, auxilia na dissolução rápida de resíduos e protege tanques e encanamentos.
+                    </p>
+                    <a href="https://produto.mercadolivre.com.br/MLB-7470008568-desinfetante-para-caixa-de-detritos-motor-home-5l-_JM" class="details-btn" target="_blank">Comprar</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Rodapé -->
+    <footer>
+        <p>&copy; 2026 Cheiros do Vale - Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+        function showProduct() {
+            document.getElementById('catalog-view').classList.remove('active');
+            document.getElementById('product-view').classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showCatalog() {
+            document.getElementById('product-view').classList.remove('active');
+            document.getElementById('catalog-view').classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function changeMainImage(src) {
+            document.getElementById('main-det-img').src = src;
+        }
+    </script>
+
+</body>
+</html>
